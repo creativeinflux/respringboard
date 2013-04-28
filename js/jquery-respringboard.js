@@ -1,10 +1,15 @@
 /*
  * jQuery RespringBoard
  *
- * @author        Justin Mitchell (http://www.creativeinflux.co.uk)
- * @version 0.0.1
+ * Copyright (c) 2013 Justin Mitchell
+ * http://creativeinflux.co.uk
+ *
+ * Licensed under MIT
+ * http://www.opensource.org/licenses/mit-license.php
+ *
+ * @author Justin Mitchell (http://www.creativeinflux.co.uk)
  * @requires jQuery
- */
+ */ 
 
 (function($) {
 
