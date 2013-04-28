@@ -1,7 +1,10 @@
-// jQuery Plugin Boilerplate
-// A boilerplate for jumpstarting jQuery plugins development
-// version 2.0, July 8th, 2011
-// by Stefan Gabos
+/*
+ * jQuery RespringBoard
+ *
+ * @author        Justin Mitchell (http://www.creativeinflux.co.uk)
+ * @version 0.0.1
+ * @requires jQuery
+ */
 
 (function($) {
 
