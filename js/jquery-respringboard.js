@@ -13,10 +13,10 @@
 		//Set the default options
 		var defaults = {
 			itemsSelector: 'item',
-			summarySelector: 'summary_content',
+			revealSelector: 'reveal',
 
-			summaryWrapperClass: 'summary',
-			summaryContentClass: 'content',
+			revealWrapperClass: 'summary',
+			revealInnerClass: 'content',
 			selectedClass: 'selected',
 			arrowClass: 'arrow',
 			closeClass: 'close',
@@ -41,7 +41,7 @@
 			plugin.options = $.extend({}, defaults, options);
 
 			//Hide all the summary handles, if js is off then the links will show
-			$('.' + plugin.options.summarySelector).hide();
+			$('.' + plugin.options.revealSelector).hide();
 
 			var resizeTimer = null;
 			//Detect any change to the window size and trigger the move_summary function
@@ -66,8 +66,8 @@
 			});
 
 			//close the summary on close click
-			$($wrapper).on('click', '.' + plugin.options.summaryWrapperClass + ' .' + plugin.options.closeClass, function() {
-				plugin.close_summary();
+			$($wrapper).on('click', '.' + plugin.options.revealWrapperClass + ' .' + plugin.options.closeClass, function() {
+				plugin.close_reveal();
 			});
 
 		};
@@ -92,12 +92,12 @@
 		};
 
 		//----------------------------------------------------------------------------------->
-		//close_summary function - trigger when we need to close an items summary
+		//close_reveal function - trigger when we need to close an items summary
 		//----------------------------------------------------------------------------------->
-		plugin.close_summary = function(callback) {
+		plugin.close_reveal = function(callback) {
 
 			//we might have nothing so just return
-			if($wrapper.find('.' + plugin.options.summaryWrapperClass).length > 0 === false) {
+			if($wrapper.find('.' + plugin.options.revealWrapperClass).length > 0 === false) {
 				if(callback) callback();
 				return;
 			}
@@ -105,22 +105,22 @@
 			var $item = $wrapper.find('.' + plugin.options.selectedClass).removeClass(plugin.options.selectedClass);
 			//Check if the item is inline, if it is we need to move it to inside the item otherwise it will be lost forever
 			if($item.data('inline') === true) {
-				$clone = $($wrapper.find('.' + plugin.options.summaryWrapperClass).find('.' + plugin.options.summarySelector)).clone();
+				$clone = $($wrapper.find('.' + plugin.options.revealWrapperClass).find('.' + plugin.options.revealSelector)).clone();
 				$item.append($clone.hide());
 				$item.removeData('inline');
 			}
 
-			$wrapper.find('.' + plugin.options.summaryWrapperClass).find('.' + plugin.options.summaryContentClass).css('visibility', 'hidden');
+			$wrapper.find('.' + plugin.options.revealWrapperClass).find('.' + plugin.options.revealInnerClass).css('visibility', 'hidden');
 
 			//Remove the summary
 			if(plugin.options.animate) {
-					$wrapper.find('.' + plugin.options.summaryWrapperClass).slideToggle(plugin.options.animateSpeed, function() {
-						$wrapper.find('.' + plugin.options.summaryWrapperClass).remove();
+					$wrapper.find('.' + plugin.options.revealWrapperClass).slideToggle(plugin.options.animateSpeed, function() {
+						$wrapper.find('.' + plugin.options.revealWrapperClass).remove();
 						if(callback) callback();
 						return;
 					});
 			} else {
-				$wrapper.find('.' + plugin.options.summaryWrapperClass).remove();
+				$wrapper.find('.' + plugin.options.revealWrapperClass).remove();
 				if(callback) callback();
 				return;
 			}
@@ -132,7 +132,7 @@
 		plugin.next_item = function(callback) {
 
 			$item = $wrapper.find('.' + plugin.options.selectedClass).next();
-			if($item.is('.' + plugin.options.summaryWrapperClass)) {
+			if($item.is('.' + plugin.options.revealWrapperClass)) {
 				$item = $item.next();
 			}
 			if($item.length > 0 === false) {
@@ -163,15 +163,15 @@
 		var open_summary = function($item, callback) {
 
 			$item.addClass(plugin.options.selectedClass);
-			$(el + ' .' + plugin.options.summaryWrapperClass).prepend('<div class="' + plugin.options.arrowClass + '"></div>');
+			$(el + ' .' + plugin.options.revealWrapperClass).prepend('<div class="' + plugin.options.arrowClass + '"></div>');
 
 			if(plugin.options.animate) {
-				$wrapper.find('.' + plugin.options.summaryWrapperClass).slideToggle(plugin.options.animateSpeed, function() {
-					$(el + ' .' + plugin.options.summaryContentClass).css('visibility', 'visible');
+				$wrapper.find('.' + plugin.options.revealWrapperClass).slideToggle(plugin.options.animateSpeed, function() {
+					$(el + ' .' + plugin.options.revealInnerClass).css('visibility', 'visible');
 				});
 			} else {
-				$wrapper.find('.' + plugin.options.summaryWrapperClass).show().children('.' + plugin.options.summarySelector).show();
-				$(el + ' .' + plugin.options.summaryContentClass).css('visibility', 'visible');
+				$wrapper.find('.' + plugin.options.revealWrapperClass).show().children('.' + plugin.options.revealSelector).show();
+				$(el + ' .' + plugin.options.revealInnerClass).css('visibility', 'visible');
 			}
 
 			if(callback) callback();
@@ -182,7 +182,7 @@
 		//Move_summary funciton - Used to move a summary into the correct position
 		//----------------------------------------------------------------------------------->
 		var move_summary = function($item, callback) {
-			$wrapper.append($(el + ' .' + plugin.options.summaryWrapperClass));
+			$wrapper.append($(el + ' .' + plugin.options.revealWrapperClass));
 			//We need to count all the items to the right of our element and check if they are in the same row
 			var next = $item.next();
 
@@ -195,7 +195,7 @@
 			//This the last element in our row
 			var row_end = $item.index(el + ' ' + '.' + plugin.options.itemsSelector) + 1;
 			//Insert the summary after the last element
-			$(el + ' .' + plugin.options.summaryWrapperClass).insertAfter($(el + ' ' + '.' + plugin.options.itemsSelector + ':nth-child(' +  row_end + ')'));
+			$(el + ' .' + plugin.options.revealWrapperClass).insertAfter($(el + ' ' + '.' + plugin.options.itemsSelector + ':nth-child(' +  row_end + ')'));
 
 			if(callback) callback();
 		};
@@ -207,7 +207,7 @@
 			var position = $item.position().left + $item.outerWidth(true) / 2;
 			var arrow_width = $('.' + plugin.options.arrowClass).outerWidth(true) / 2;
 			var actual_width = position - arrow_width;
-			$(el + ' .' + plugin.options.summaryWrapperClass + ' .' + plugin.options.arrowClass).css('left', actual_width + 'px');
+			$(el + ' .' + plugin.options.revealWrapperClass + ' .' + plugin.options.arrowClass).css('left', actual_width + 'px');
 
 			if(callback) callback();
 		};
@@ -217,8 +217,8 @@
 		//----------------------------------------------------------------------------------->
 		var add_close = function($item, callback) {
 
-			$summary = $wrapper.find('.' + plugin.options.summaryWrapperClass + ' .' + plugin.options.summaryContentClass + ' .' + plugin.options.summarySelector);
-			if($wrapper.find('.' + plugin.options.summaryWrapperClass + ' .' + plugin.options.summaryContentClass + ' .' + plugin.options.summarySelector + ' .' + plugin.options.closeClass).length > 0 === false) {
+			$summary = $wrapper.find('.' + plugin.options.revealWrapperClass + ' .' + plugin.options.revealInnerClass + ' .' + plugin.options.revealSelector);
+			if($wrapper.find('.' + plugin.options.revealWrapperClass + ' .' + plugin.options.revealInnerClass + ' .' + plugin.options.revealSelector + ' .' + plugin.options.closeClass).length > 0 === false) {
 				$summary.prepend('<span class="' + plugin.options.closeClass + '"></span>');
 			}
 
@@ -229,9 +229,9 @@
 		//----------------------------------------------------------------------------------->
 		var load_summary = function($item, callback) {
 
-			plugin.close_summary(function() {
+			plugin.close_reveal(function() {
 
-			var $summary_content = $item.children('.' + plugin.options.summarySelector);
+			var $summary_content = $item.children('.' + plugin.options.revealSelector);
 
 				//check if the summary is a link, if it is we need to load via ajax
 				if($summary_content.is('a')) {
@@ -240,18 +240,18 @@
 						type: "GET",
 						url: $link,
 						success: function(summary) {
-							$wrapper.append('<div class="' + plugin.options.summaryWrapperClass + '"></div>');
-							$(el + ' .' + plugin.options.summaryWrapperClass).html('<div class="' + plugin.options.summaryContentClass + '">' + summary + '</div>').hide();
-							$(el + ' .' + plugin.options.summaryContentClass).css('visibility', 'hidden');
+							$wrapper.append('<div class="' + plugin.options.revealWrapperClass + '"></div>');
+							$(el + ' .' + plugin.options.revealWrapperClass).html('<div class="' + plugin.options.revealInnerClass + '">' + summary + '</div>').hide();
+							$(el + ' .' + plugin.options.revealInnerClass).css('visibility', 'hidden');
 							if(callback) callback();
 						}
 					});
 				} else {
 					$item.data('inline', true);
-					$wrapper.append('<div class="' + plugin.options.summaryWrapperClass + '"><div class="' + plugin.options.summaryContentClass + '"></div></div>');
-					var $content = $(el + ' .' + plugin.options.summaryWrapperClass + ' .' + plugin.options.summaryContentClass);
-					$content.html($summary_content).parent('.' + plugin.options.summaryWrapperClass).hide();
-					$content.children('.' + plugin.options.summarySelector).show();
+					$wrapper.append('<div class="' + plugin.options.revealWrapperClass + '"><div class="' + plugin.options.revealInnerClass + '"></div></div>');
+					var $content = $(el + ' .' + plugin.options.revealWrapperClass + ' .' + plugin.options.revealInnerClass);
+					$content.html($summary_content).parent('.' + plugin.options.revealWrapperClass).hide();
+					$content.children('.' + plugin.options.revealSelector).show();
 					$content.css('visibility', 'hidden');
 					if(callback) callback();
 				}
